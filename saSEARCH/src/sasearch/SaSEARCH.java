@@ -37,10 +37,12 @@ public class SaSEARCH {
             while (true) {
                 //take input and send the packet
                 
-                huffman.zipFile("texto.txt", "comprimido.txt");
+                Huffman.zipFile("texto.txt", "comprimido.txt");
+                
+                byte[] accion = new String("recibir").getBytes();
+                sock.send(new DatagramPacket(accion, accion.length, host, port));
                 
                 byte[] b = Files.readAllBytes(new File("comprimido.txt").toPath());
-
                 DatagramPacket dp = new DatagramPacket(b, b.length, host, port);
                 sock.send(dp);
 

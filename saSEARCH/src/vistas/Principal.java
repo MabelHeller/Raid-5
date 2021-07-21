@@ -39,7 +39,7 @@ import modelos.Metadatos;
 public class Principal extends javax.swing.JFrame {
 
     File file;
-
+    DatagramSocket ds = new DatagramSocket(8866);
     /**
      * Creates new form Principal
      */
@@ -280,7 +280,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            DatagramSocket ds = new DatagramSocket(8866);
+            
 
             byte[] accion = "guardar".getBytes();
             ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
@@ -480,7 +480,6 @@ public class Principal extends javax.swing.JFrame {
 
     public void recuperarArchivo() {
         try {
-            DatagramSocket ds = new DatagramSocket(8866);
 
             byte[] accion = "recuperar".getBytes();
             ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
