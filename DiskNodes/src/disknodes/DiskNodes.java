@@ -10,6 +10,7 @@ import java.nio.file.Files;
 
 public class DiskNodes extends Thread {
 
+    DatagramSocket socket = null;
     DatagramSocket disco = null;
     DatagramPacket packet = null;
     int puerto;
@@ -48,9 +49,8 @@ public class DiskNodes extends Thread {
                         break;
                     case "recuperar":
                         byte[] nombreBytes = new byte[1024];
-                        disco.receive(new DatagramPacket(accion, accion.length));// Save data to packet
+                        disco.receive(new DatagramPacket(nombreBytes, nombreBytes.length));// Save data to packet
                         String nombre = data(nombreBytes).toString();
-                        System.out.println("Disco " + this.discoNum + "recuperando archivo:" + nombre);
                         RecuperarArchivo(disco, puerto, discoNum, nombre);
                         break;
 
@@ -60,13 +60,11 @@ public class DiskNodes extends Thread {
 
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        // TODO Auto-generated catch block
         finally {
-            if (disco != null) {
-                disco.close();
+            if (socket != null) {
+                socket.close();
             }
         }
 
@@ -74,13 +72,13 @@ public class DiskNodes extends Thread {
 
     public static void GuardarArchivo(DatagramSocket disco, int puerto, int discoNum) throws IOException {
         byte[] nombre = new byte[1024];
-        disco.receive(new DatagramPacket(nombre, nombre.length));
+        disco.receive(new DatagramPacket(nombre, nombre.length));// Save data to packet
         String nombreString = data(nombre).toString();
         byte[] dataSize = new byte[1024];
-        disco.receive(new DatagramPacket(dataSize, dataSize.length));
+        disco.receive(new DatagramPacket(dataSize, dataSize.length));// Save data to packet
         int size = Integer.parseInt(data(dataSize).toString());
         byte[] fileContent = new byte[size];
-        disco.receive(new DatagramPacket(fileContent, fileContent.length));
+        disco.receive(new DatagramPacket(fileContent, fileContent.length));// Save data to packet
         Files.write(new File("disk/raid5/disk" + discoNum + "/" + nombreString).toPath(), fileContent);
         byte[] data2 = String.valueOf(puerto).getBytes();
         disco.send(new DatagramPacket(data2, data2.length, InetAddress.getByName("localhost"), 8888));
@@ -89,17 +87,19 @@ public class DiskNodes extends Thread {
     public static void RecuperarArchivo(DatagramSocket disco, int puerto, int discoNum, String nombre) throws UnknownHostException, IOException {
         String filesName[] = new File("disk/raid5/disk" + discoNum + "/").list();
         String archivo = "";
-        for (int i = 0; i < filesName.length; i++) {
-            if (filesName[i].matches(".*" + nombre + "-\\d+" + ".txt")) {
-                archivo = filesName[i];
+        for (int i = 0; i < filesName.length; i++) {    
+            if (filesName[i].matches(nombre+ "-\\d+"+".txt")) {
+                archivo = filesName[i];                
+                
                 break;
             }
         }
-        File file = new File(archivo);
+        File file = new File("disk/raid5/disk" + discoNum + "/"+archivo);
         byte[] fileContent = Files.readAllBytes(file.toPath());
         String dataSize = String.valueOf(fileContent.length);
         byte[] data3 = dataSize.getBytes();
         String srcPos = archivo.substring(archivo.indexOf("-") + 1,archivo.indexOf("."));
+
         disco.send(new DatagramPacket(data3, data3.length,InetAddress.getByName("localhost"), 8888));
         disco.send(new DatagramPacket(fileContent, fileContent.length,InetAddress.getByName("localhost"), 8888));
         disco.send(new DatagramPacket(srcPos.getBytes(), srcPos.getBytes().length, InetAddress.getByName("localhost"), 8888));
