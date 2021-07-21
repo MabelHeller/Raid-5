@@ -49,7 +49,7 @@ public class UDPServerRunnable extends Thread {
                         break;
                     case "recuperar":
                         byte[] nombreBytes = new byte[1024];
-                        disco.receive(new DatagramPacket(accion, accion.length));// Save data to packet
+                        disco.receive(new DatagramPacket(nombreBytes, nombreBytes.length));// Save data to packet
                         String nombre = data(nombreBytes).toString();
                         System.out.println("Disco " + this.discoNum + "recuperando archivo:" + nombre);
                         RecuperarArchivo(disco, puerto, discoNum, nombre);
@@ -92,13 +92,15 @@ public class UDPServerRunnable extends Thread {
     public static void RecuperarArchivo(DatagramSocket disco, int puerto, int discoNum, String nombre) throws UnknownHostException, IOException {
         String filesName[] = new File("disk/raid5/disk" + discoNum + "/").list();
         String archivo = "";
-        for (int i = 0; i < filesName.length; i++) {
-            if (filesName[i].matches(".*" + nombre + "-\\d+" + ".txt")) {
-                archivo = filesName[i];
+        System.out.println(filesName.length);
+        for (int i = 0; i < filesName.length; i++) {    
+            if (filesName[i].matches(nombre+ "-\\d+"+".txt")) {
+                archivo = filesName[i];                
+                
                 break;
             }
         }
-        File file = new File(archivo);
+        File file = new File("disk/raid5/disk" + discoNum + "/"+archivo);
         byte[] fileContent = Files.readAllBytes(file.toPath());
         String dataSize = String.valueOf(fileContent.length);
         byte[] data3 = dataSize.getBytes();

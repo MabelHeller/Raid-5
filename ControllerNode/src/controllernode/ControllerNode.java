@@ -53,6 +53,7 @@ public class ControllerNode {
 
                         break;
                     case "recuperar":
+                        System.out.println("recuperar");
                         byte[] libroRecuperar = new byte[1024];
                         socketS.receive(new DatagramPacket(libroRecuperar, libroRecuperar.length));// Save data to packet
                         String libroRecuperarNombre = data(libroRecuperar).toString();
@@ -90,6 +91,7 @@ public class ControllerNode {
             socketS.send(new DatagramPacket(accion, accion.length, adress, puertosDiscos[i]));
 
             byte[] data2 = name.getBytes();
+            System.out.println("NAME"+name);
             socketS.send(new DatagramPacket(data2, data2.length, adress, puertosDiscos[i]));
 
             byte[] fileSize = new byte[1024];
@@ -254,5 +256,4 @@ public class ControllerNode {
     }
 }
 
-    
-}
+   

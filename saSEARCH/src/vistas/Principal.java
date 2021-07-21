@@ -7,8 +7,10 @@ package vistas;
 
 import Huffman.Huffman;
 import com.mysql.jdbc.Connection;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -39,11 +41,17 @@ import modelos.Metadatos;
 public class Principal extends javax.swing.JFrame {
 
     File file;
-    DatagramSocket ds = new DatagramSocket(8866);
+    DatagramSocket ds;
+
     /**
      * Creates new form Principal
      */
     public Principal() throws ClassNotFoundException {
+        try {
+            this.ds = new DatagramSocket(8866);
+        } catch (SocketException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         initComponents();
         llenarTabla();
     }
@@ -280,7 +288,6 @@ public class Principal extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            
 
             byte[] accion = "guardar".getBytes();
             ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
@@ -288,8 +295,7 @@ public class Principal extends javax.swing.JFrame {
             byte[] libro = (jtfNombre.getText() + jtfEdicion.getText()).getBytes();
             ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
 
-            Huffman huffman = new Huffman();
-            huffman.zipFile(file.getPath(), "comprimido.txt");
+            Huffman.zipFile(file.getPath(), "comprimido.txt");
             byte[] b = Files.readAllBytes(new File("comprimido.txt").toPath());
             ds.send(new DatagramPacket(b, b.length, InetAddress.getByName("localhost"), 8888));
 
@@ -317,7 +323,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jtfEdicionActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-
+        recuperarArchivo();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -416,8 +422,8 @@ public class Principal extends javax.swing.JFrame {
 
             while (rs.next()) {
                 //son 3 columnas, la dimesion del objeto datos de 3
-                Object[] datos = new Object[3];
-                for (int row = 0; row < 3; row++) {
+                Object[] datos = new Object[4];
+                for (int row = 0; row < 4; row++) {
                     datos[row] = rs.getObject(row + 1);
 
                 }
@@ -483,23 +489,28 @@ public class Principal extends javax.swing.JFrame {
 
             byte[] accion = "recuperar".getBytes();
             ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
-            
-            String nombre=this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0).toString();
-            String edicion=this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 3).toString();
-         
-            byte[] libro = (nombre+edicion).getBytes();
+
+            String nombre = this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0).toString();
+            String edicion = this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 3).toString();
+
+            byte[] libro = (nombre + edicion).getBytes();
             ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
-            
+
             byte[] receive = new byte[65535];
-            File fileTemp=new File("libroTemporal.txt");
+            File fileTemp = new File("libroTemporal.txt");
             ds.receive(new DatagramPacket(receive, receive.length));
-            Files.write(fileTemp.toPath(), receive); 
+            Files.write(fileTemp.toPath(), receive);
             Huffman.unZipFile("libroTemporal.txt", "libroObtenido.txt");
-                        
-            File file=new File("libroObtenido.txt");            
-            String libroObtenido=data(Files.readAllBytes(file.toPath())).toString();
-            jTextArea1.setText(libroObtenido);
-                        
+
+            File file = new File("libroObtenido.txt");
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String st;
+            while ((st = br.readLine()) != null) {
+                jTextArea1.append(st+"\n");
+            }           
+
         } catch (SocketException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownHostException ex) {
@@ -508,7 +519,7 @@ public class Principal extends javax.swing.JFrame {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public static StringBuilder data(byte[] a) {
         if (a == null) {
             return null;
