@@ -472,6 +472,11 @@ public class Principal extends javax.swing.JFrame {
         try {
             String ruta = fileChooser.getSelectedFile().getAbsolutePath();
             file = new File(ruta);
+            if ((file == null) || (file.getName().equals(""))) {
+                jTextField1.setText("...");
+            } else {
+                jTextField1.setText(file.getName());
+            }
 
         } catch (NullPointerException e) {
             System.out.println("No se ha seleccionado ningún fichero");
