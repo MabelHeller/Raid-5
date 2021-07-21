@@ -1,5 +1,6 @@
 package prueba;
 
+import Huffman.Huffman;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -10,11 +11,11 @@ import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static prueba.UDPService.data;
 
 public class UDPClient {
 
     static int[] puertosDiscos;
+    
 
     public static void main(String[] args) {
 
@@ -22,25 +23,34 @@ public class UDPClient {
             boolean flag = true;
             DatagramSocket socketS = new DatagramSocket(8888);
             InetAddress adress = InetAddress.getByName("localhost");
+            iniciarDiscos(socketS, adress);
             while (flag) {
                 byte[] accion = new byte[1024];
                 System.out.println("Esperando acciones...");
                 socketS.receive(new DatagramPacket(accion, accion.length));// Save data to packet
-                String accionString = data(accion).toString();
-
+                String accionString = data(accion).toString();                
                 switch (accionString) {
                     case "guardar":
                         byte[] libroGuardar = new byte[1024];
                         socketS.receive(new DatagramPacket(libroGuardar, libroGuardar.length));// Save data to packet
                         String libroGuardarNombre = data(libroGuardar).toString();
-                        System.out.println("Guardando libro: "+ libroGuardarNombre);
+                        System.out.println("Guardando libro: " + libroGuardarNombre);
+                        
+                        byte[] receive = new byte[65535];
+                        File fileTemp = new File("temporal.txt");                             
+                        socketS.receive(new DatagramPacket(receive, receive.length));
+                        Files.write(fileTemp.toPath(), receive);
+                        Huffman.unZipFile("temporal.txt", "descomprimido.txt");                                               
+                                                
                         guardarLibroEnDiscos(socketS, adress, libroGuardarNombre);
+                        
+
                         break;
                     case "recuperar":
                         byte[] libroRecuperar = new byte[1024];
                         socketS.receive(new DatagramPacket(libroRecuperar, libroRecuperar.length));// Save data to packet
                         String libroRecuperarNombre = data(libroRecuperar).toString();
-                        System.out.println("Recuperando libro: "+ libroRecuperarNombre);
+                        System.out.println("Recuperando libro: " + libroRecuperarNombre);
                         recuperarArchivosDeDiscos(socketS, adress, libroRecuperarNombre);
                         break;
 
@@ -48,11 +58,8 @@ public class UDPClient {
                         break;
                 }
 
-                iniciarDiscos(socketS, adress);
-
-                
                 deleteDirectoryStream(new File("temps").toPath());
-                //
+                
             }
         } catch (SocketException e) {
             // TODO Auto-generated catch block
@@ -89,9 +96,12 @@ public class UDPClient {
         }
     }
 
+    
     public static void guardarLibroEnDiscos(DatagramSocket socketS, InetAddress adress, String srcFilePath) throws IOException {
-        long srcFileLength = new File(srcFilePath).length();
-
+        
+        File archivo=new File("descomprimido.txt");
+        long srcFileLength = archivo.length();
+        
         long dflel = srcFileLength / puertosDiscos.length;
         long dfll = dflel + srcFileLength % puertosDiscos.length;
         System.err.println("Length: " + srcFileLength + " PuertosList:" + puertosDiscos.length);
@@ -101,7 +111,7 @@ public class UDPClient {
             String name = dividirArchivo(i, dfll, dflel, puertosDiscos.length, srcFilePath);
             byte[] data2 = name.getBytes();
             socketS.send(new DatagramPacket(data2, data2.length, adress, puertosDiscos[i]));
-            File file = new File(name);
+            File file = new File("temps/"+name);
             byte[] fileContent = Files.readAllBytes(file.toPath());
             String dataSize = String.valueOf(fileContent.length);
             byte[] data3 = dataSize.getBytes();
@@ -161,7 +171,7 @@ public class UDPClient {
     public static String dividirArchivo(int loc, long dfll, long dflel, int dataDisk, String srcFilePath) throws IOException {
         // long dfll;
 
-        long fileLength;// 分割后的文件长度
+        long fileLength;
         long startPos = loc * dflel;
         if (loc != dataDisk - 1) {
             fileLength = dflel;
@@ -169,22 +179,22 @@ public class UDPClient {
             fileLength = dfll;
         }
 
-        File desFile = new File("temps/temp" + "-" + startPos + ".txt");// 目标文件路径
-        if (desFile.exists()) {// 存在则删除
+        File desFile = new File("temps/"+srcFilePath + "-" + startPos + ".txt");
+        if (desFile.exists()) {
             desFile.delete();
         }
         RandomAccessFile rafSrc = null;
         RandomAccessFile rafDes = null;
         System.err.println("Loc: " + loc + " Dflel:" + dflel + " SrcPos:" + startPos);
         try {
-            desFile.createNewFile();// 创建文件
-            rafSrc = new RandomAccessFile(srcFilePath, "r");// 随机读方式打开
-            rafDes = new RandomAccessFile(desFile, "rw");// 随机写方式打开
-            rafSrc.seek(loc * dflel);// 设置读文件指针位置
+            desFile.createNewFile();
+            rafSrc = new RandomAccessFile("descomprimido.txt", "r");
+            rafDes = new RandomAccessFile(desFile, "rw");
+            rafSrc.seek(loc * dflel);
             int bufferLen = 1024;
             byte[] buffer = new byte[bufferLen];
 
-            if (fileLength <= bufferLen) {// 一次读出来的字节数大于该文件条带的大小
+            if (fileLength <= bufferLen) {
                 rafSrc.read(buffer);
                 rafDes.write(buffer, 0, (int) fileLength);
             } else {
@@ -219,5 +229,18 @@ public class UDPClient {
                 file.delete();
             }
         }
+    }
+    
+    public static StringBuilder data(byte[] a) {
+        if (a == null) {
+            return null;
+        }
+        StringBuilder ret = new StringBuilder();
+        int i = 0;
+        while (a[i] != 0) {
+            ret.append((char) a[i]);
+            i++;
+        }
+        return ret;
     }
 }
