@@ -25,6 +25,7 @@ public class DiskNodesService {
                 byte[] data2 = String.valueOf(puerto).getBytes();
                 socket.send(new DatagramPacket(data2, data2.length, adress, 8888));
             }
+            socket.close();
         } catch (SocketException e) {
 
         } catch (IOException ex) {

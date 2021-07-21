@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controllernode;
 import Huffman.Huffman;
 import java.io.File;
@@ -14,10 +9,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-/**
- *
- * @author Maikel
- */
+
 public class ControllerNode {
 
     static int[] puertosDiscos;
@@ -32,32 +24,26 @@ public class ControllerNode {
             iniciarDiscos(socketS, adress);
             while (flag) {
                 byte[] accion = new byte[1024];
-                System.out.println("Esperando acciones...");
-                socketS.receive(new DatagramPacket(accion, accion.length));// Save data to packet
+                
+                socketS.receive(new DatagramPacket(accion, accion.length));
                 String accionString = data(accion).toString();                
                 switch (accionString) {
                     case "guardar":
                         byte[] libroGuardar = new byte[1024];
-                        socketS.receive(new DatagramPacket(libroGuardar, libroGuardar.length));// Save data to packet
+                        socketS.receive(new DatagramPacket(libroGuardar, libroGuardar.length));
                         String libroGuardarNombre = data(libroGuardar).toString();
-                        System.out.println("Guardando libro: " + libroGuardarNombre);
                         
                         byte[] receive = new byte[65535];
                         File fileTemp = new File("temporal.txt");                             
                         socketS.receive(new DatagramPacket(receive, receive.length));
                         Files.write(fileTemp.toPath(), receive);
-                        Huffman.unZipFile("temporal.txt", "descomprimido.txt");                                               
-                                                
+                        Huffman.unZipFile("temporal.txt", "descomprimido.txt");                                                                     
                         guardarLibroEnDiscos(socketS, adress, libroGuardarNombre);
-                        
-
                         break;
                     case "recuperar":
-                        System.out.println("recuperar");
                         byte[] libroRecuperar = new byte[1024];
-                        socketS.receive(new DatagramPacket(libroRecuperar, libroRecuperar.length));// Save data to packet
+                        socketS.receive(new DatagramPacket(libroRecuperar, libroRecuperar.length));
                         String libroRecuperarNombre = data(libroRecuperar).toString();
-                        System.out.println("Recuperando libro: " + libroRecuperarNombre);
                         recuperarArchivosDeDiscos(socketS, adress, libroRecuperarNombre);
                         Huffman.zipFile("temporalFinal.txt", "temps/libroTemporalComprimido.txt");
                         byte[] libroFinal = Files.readAllBytes(new File("temps/libroTemporalComprimido.txt").toPath());
@@ -72,11 +58,11 @@ public class ControllerNode {
                 
             }
         } catch (SocketException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
-        } // TODO Auto-generated catch block
+        } 
         catch (IOException e) {
-            // TODO Auto-generated catch block
+            
             e.printStackTrace();
         }
 
@@ -86,12 +72,9 @@ public class ControllerNode {
         File temporal = new File("temporalFinal.txt");
         temporal.createNewFile();
         for (int i = 0; i < puertosDiscos.length; i++) {
-            // String name = dividirArchivo(i,dfll,dflel, 4, "descomprimido.txt");
             byte[] accion = "recuperar".getBytes();
             socketS.send(new DatagramPacket(accion, accion.length, adress, puertosDiscos[i]));
-
             byte[] data2 = name.getBytes();
-            System.out.println("NAME"+name);
             socketS.send(new DatagramPacket(data2, data2.length, adress, puertosDiscos[i]));
 
             byte[] fileSize = new byte[1024];
@@ -115,7 +98,6 @@ public class ControllerNode {
         
         long dflel = srcFileLength / puertosDiscos.length;
         long dfll = dflel + srcFileLength % puertosDiscos.length;
-        System.err.println("Length: " + srcFileLength + " PuertosList:" + puertosDiscos.length);
         for (int i = 0; i < puertosDiscos.length; i++) {
             byte[] accion = "guardar".getBytes();
             socketS.send(new DatagramPacket(accion, accion.length, adress, puertosDiscos[i]));
@@ -143,7 +125,6 @@ public class ControllerNode {
         for (int i = 0; i < numDisk; i++) {
             puertosDiscos[i] = puertoBase;
             byte[] data2 = String.valueOf(puertosDiscos[i]).getBytes();
-            System.out.println("Client Port:" + puertosDiscos[i]);
             socketS.send(new DatagramPacket(data2, data2.length, adress, 7777));
             byte[] receive = new byte[65535];
             socketS.receive(new DatagramPacket(receive, receive.length));
@@ -161,7 +142,7 @@ public class ControllerNode {
         try {
             rafSrc = new RandomAccessFile("tempFile.txt", "r");
             rafDes = new RandomAccessFile("temporalFinal.txt", "rw");
-            rafDes.seek(srcPos);// 设置文件指针位置
+            rafDes.seek(srcPos);
             byte[] buffer = new byte[1024];
             int len;
             while ((len = rafSrc.read(buffer)) != -1) {
@@ -171,7 +152,7 @@ public class ControllerNode {
             e.printStackTrace();
         } finally {
             try {
-                rafDes.close();// 关闭流
+                rafDes.close();
                 rafSrc.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -180,8 +161,6 @@ public class ControllerNode {
     }
 
     public static String dividirArchivo(int loc, long dfll, long dflel, int dataDisk, String srcFilePath) throws IOException {
-        // long dfll;
-
         long fileLength;
         long startPos = loc * dflel;
         if (loc != dataDisk - 1) {
@@ -196,7 +175,6 @@ public class ControllerNode {
         }
         RandomAccessFile rafSrc = null;
         RandomAccessFile rafDes = null;
-        System.err.println("Loc: " + loc + " Dflel:" + dflel + " SrcPos:" + startPos);
         try {
             desFile.createNewFile();
             rafSrc = new RandomAccessFile("descomprimido.txt", "r");
@@ -212,7 +190,7 @@ public class ControllerNode {
                 while (true) {
                     rafDes.write(buffer, 0, rafSrc.read(buffer));
                     fileLength -= bufferLen;
-                    if (fileLength >= bufferLen) {// 剩余未读长度大于缓冲区长度
+                    if (fileLength >= bufferLen) {
                         continue;
                     } else {
                         rafSrc.read(buffer);
@@ -225,7 +203,7 @@ public class ControllerNode {
             e.printStackTrace();
         } finally {
             try {
-                rafDes.close();// 关闭流
+                rafDes.close();
                 rafSrc.close();
             } catch (IOException e) {
                 e.printStackTrace();
