@@ -83,7 +83,7 @@ public class Huffman {
             os.write(finalBytes);
 
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
         }finally {
             try {
                 os.close();
@@ -181,7 +181,7 @@ public class Huffman {
         for(byte b:bytes){
             stringBuilder.append(huffmanCodes.get(b));
         }
-        System.out.println("Cadena binaria codificada"+stringBuilder.toString());
+        //System.out.println("Cadena binaria codificada"+stringBuilder.toString());
 
         // Calcula el número de bits convertidos de codificación binaria Huffman a byte []
         int len=0;
@@ -238,7 +238,7 @@ public class Huffman {
             boolean flag=(i==huffmanCodesByte.length-1);
             stringBuilder1.append(byteToBitString(!flag,b));
         }
-        System.out.println("Cadena binaria después de la decodificación"+stringBuilder1.toString());
+        //System.out.println("Cadena binaria después de la decodificación"+stringBuilder1.toString());
 
         // Decodifica la cadena de acuerdo con la tabla de mapeo de Huffman
         // 1. Reemplace la tabla de asignación de codificación de Huffman, porque se requiere una consulta inversa

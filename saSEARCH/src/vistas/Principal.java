@@ -4,9 +4,17 @@
  * and open the template in the editor.
  */
 package vistas;
+
+import Huffman.Huffman;
 import com.mysql.jdbc.Connection;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.nio.file.Files;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -22,11 +30,14 @@ import javax.swing.JOptionPane;
 
 import javax.swing.table.DefaultTableModel;
 import modelos.Metadatos;
+
 /**
  *
  * @author Heller
  */
 public class Principal extends javax.swing.JFrame {
+
+    File file;
 
     /**
      * Creates new form Principal
@@ -63,6 +74,7 @@ public class Principal extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jtfEdicion = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -158,41 +170,41 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(32, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(73, 73, 73)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jtfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel8))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jtfPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel2)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jtfEdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jtfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(222, 222, 222)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(232, 232, 232)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(73, 73, 73)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel7)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jtfPropietario, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jtfEdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jtfFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jLabel6)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(jtfNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel8)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(36, 36, 36)
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(232, 232, 232)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -210,7 +222,9 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 535, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -241,29 +255,7 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Scanner entrada = null;
-        JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt", "text");
-        fileChooser.setFileFilter(filter);
-        fileChooser.showOpenDialog(fileChooser);
-        try {
-            String ruta = fileChooser.getSelectedFile().getAbsolutePath();                                        
-            File f = new File(ruta);
-            entrada = new Scanner(f);
-            while (entrada.hasNext()) {
-                System.out.println(entrada.nextLine());
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (NullPointerException e) {
-            System.out.println("No se ha seleccionado ningún fichero");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            if (entrada != null) {
-                entrada.close();
-            }
-        }
+        guardarArchivo();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -279,20 +271,36 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        int resultado=0;
         try {
-            resultado=0;
-            if (guardarMetadatos()>0){
+            DatagramSocket ds = new DatagramSocket(8866);
+
+            byte[] accion = "guardar".getBytes();
+            ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
+            
+            
+            byte[] libro=(jtfNombre.getText()+jtfEdicion.getText()).getBytes();            
+            ds.send(new DatagramPacket(libro, libro.length,InetAddress.getByName("localhost"), 8888));
+            
+            Huffman huffman = new Huffman();
+            huffman.zipFile(file.getPath(), "comprimido.txt");
+            byte[] b = Files.readAllBytes(new File("comprimido.txt").toPath());
+            ds.send(new DatagramPacket(b, b.length,InetAddress.getByName("localhost"), 8888));            
+            
+            if (guardarMetadatos() > 0) {
                 this.jtfNombre.setText("");
                 this.jtfPropietario.setText("");
                 this.jtfFecha.setText("");
-                this.jtfEdicion.setText("");                                
+                this.jtfEdicion.setText("");
             }
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, "Ha surgido un error y no se ha podido guardar el registro.");
         } catch (ClassNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "Ha surgido un error y no se ha podido guardar el registro.");
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SocketException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -339,68 +347,67 @@ public class Principal extends javax.swing.JFrame {
             }
         });
     }
-    
-    public void llenarTabla() throws ClassNotFoundException{
-       
-        try{
-            DefaultTableModel modelo =new DefaultTableModel();
+
+    public void llenarTabla() throws ClassNotFoundException {
+
+        try {
+            DefaultTableModel modelo = new DefaultTableModel();
             jTable1.setModel(modelo);
-            
-            PreparedStatement ps=null;
-            ResultSet rs=null;
-            Conexion conn=new Conexion();
-            Connection con=(Connection) conn.obtener();
-            String sql= "SELECT nombre, fecha, propietario, edicion from Metadatos";
-            ps= con.prepareStatement(sql);
-            rs=ps.executeQuery();
-            
-            ResultSetMetaData rsMd=rs.getMetaData();
-            int cantidadColumnas=rsMd.getColumnCount();
+
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            Conexion conn = new Conexion();
+            Connection con = (Connection) conn.obtener();
+            String sql = "SELECT nombre, fecha, propietario, edicion from Metadatos";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            ResultSetMetaData rsMd = rs.getMetaData();
+            int cantidadColumnas = rsMd.getColumnCount();
             modelo.addColumn("Nombre");
             modelo.addColumn("Fecha de creación");
             modelo.addColumn("Propietario");
             modelo.addColumn("Edición");
-            
-            while(rs.next()){
-                Object[] filas=new Object[cantidadColumnas];
-                for (int i=0; i<cantidadColumnas; i++){
-                    filas[i]= rs.getObject(i+1);//para que ponga el dato de la posicion #1
-                    
+
+            while (rs.next()) {
+                Object[] filas = new Object[cantidadColumnas];
+                for (int i = 0; i < cantidadColumnas; i++) {
+                    filas[i] = rs.getObject(i + 1);//para que ponga el dato de la posicion #1
+
                 }
                 modelo.addRow(filas);
             }
             ps.close();
-        }catch(SQLException ex){
+        } catch (SQLException ex) {
             System.err.println(ex.toString());
         }
     }
-    
-    public void Buscar(){
+
+    public void Buscar() {
         DefaultTableModel modelo = new DefaultTableModel();
         //añadimos las columnas al modelo
         modelo.addColumn("Nombre");
         modelo.addColumn("Fecha de creación");
         modelo.addColumn("Propietario");
         modelo.addColumn("Edición");
-        
+
         try {
-            PreparedStatement ps=null;
-            ResultSet rs=null;
-            Conexion conn=new Conexion();
-            Connection con=(Connection) conn.obtener();
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+            Conexion conn = new Conexion();
+            Connection con = (Connection) conn.obtener();
 
             //Crear sentencia
-            String sql= "SELECT nombre, fecha, propietario, edicion from Metadatos where nombre like '%" +
-                    jTextField4.getText()+ "%'";
-            ps= con.prepareStatement(sql);
-            rs=ps.executeQuery();
-            
-            
+            String sql = "SELECT nombre, fecha, propietario, edicion from Metadatos where nombre like '%"
+                    + jTextField4.getText() + "%'";
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
             while (rs.next()) {
                 //son 3 columnas, la dimesion del objeto datos de 3
                 Object[] datos = new Object[3];
                 for (int row = 0; row < 3; row++) {
-                    datos[row] = rs.getObject(row+1);
+                    datos[row] = rs.getObject(row + 1);
 
                 }
                 modelo.addRow(datos);
@@ -410,37 +417,56 @@ public class Principal extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-          
+
     }
-    
-    public int guardarMetadatos() throws SQLException, ClassNotFoundException {  
-        int rs=0;
-        try {            
-            PreparedStatement ps=null;
-            Conexion conn=new Conexion();
-            Connection con=(Connection) conn.obtener();
-            
-            if (jtfNombre.getText().equals("") || jtfFecha.getText().equals("") || jtfPropietario.getText().equals("") || jtfEdicion.getText().equals("")){
-                JOptionPane.showMessageDialog(this, "Hay campos vacios, debe llenar todos los campos");   
-            }else{
-            //Crear sentencia            
+
+    public int guardarMetadatos() throws SQLException, ClassNotFoundException {
+        int rs = 0;
+        try {
+            PreparedStatement ps = null;
+            Conexion conn = new Conexion();
+            Connection con = (Connection) conn.obtener();
+
+            if (jtfNombre.getText().equals("") || jtfFecha.getText().equals("") || jtfPropietario.getText().equals("") || jtfEdicion.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Hay campos vacios, debe llenar todos los campos");
+            } else {
                 ps = con.prepareStatement("INSERT INTO Metadatos(nombre,fecha,propietario,edicion) VALUES(?,?,?,?)");
                 ps.setString(1, jtfNombre.getText());
                 ps.setString(2, jtfFecha.getText());
                 ps.setString(3, jtfPropietario.getText());
                 ps.setString(4, jtfEdicion.getText());
-                rs=ps.executeUpdate(); 
+                rs = ps.executeUpdate();
                 ps.close();
                 JOptionPane.showMessageDialog(this, "Se ha guardado exitosamente");
             }
         } catch (SQLException ex) {
             throw new SQLException(ex);
         }
-       return rs;
+        return rs;
     }
-    
-    
-    
+
+    public void guardarArchivo() {
+
+        Scanner entrada = null;
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("text files", "txt", "text");
+        fileChooser.setFileFilter(filter);
+        fileChooser.showOpenDialog(fileChooser);
+        try {
+            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+            file = new File(ruta);
+
+        } catch (NullPointerException e) {
+            System.out.println("No se ha seleccionado ningún fichero");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (entrada != null) {
+                entrada.close();
+            }
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -455,6 +481,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jtfEdicion;
     private javax.swing.JTextField jtfFecha;
