@@ -63,6 +63,14 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   * Netbeans IDE - Entorno de desarrollo
   * JDBC MySQL - Conector base de datos
 
+  #Diagramas
+  
+  * Diagrama de Componentes
+  ![DiagramaComponentes](https://user-images.githubusercontent.com/28734060/126586821-83f93525-aae0-40d1-a1c4-b84588792c89.jpg)
+  
+  * Diagrama de Clases
+  
+
   # Wiki 
   Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra Wiki.
   
