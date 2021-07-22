@@ -11,16 +11,19 @@ import java.util.logging.Logger;
 public class DiskNodesService {
 
     public static void main(String[] args) {
-     
+
         try {
             DatagramSocket socket = new DatagramSocket(7777);
             InetAddress adress = InetAddress.getByName("localhost");
-            for (int i = 0; i < 4; i++) {
+            byte[] discos = new byte[1024];            
+            socket.receive(new DatagramPacket(discos, discos.length));            
+            String numDiscos=data(discos).toString();
+            for (int i = 0; i < Integer.parseInt(numDiscos); i++) {
                 System.err.println("Disk Service Run On");
                 byte[] receive = new byte[65535];
                 socket.receive(new DatagramPacket(receive, receive.length));
                 int puerto = Integer.parseInt(data(receive).toString());
-                DiskNodes udpThread = new DiskNodes(i,puerto, new DatagramSocket(puerto));
+                DiskNodes udpThread = new DiskNodes(i, puerto, new DatagramSocket(puerto));
                 udpThread.start();
                 byte[] data2 = String.valueOf(puerto).getBytes();
                 socket.send(new DatagramPacket(data2, data2.length, adress, 8888));

@@ -23,6 +23,7 @@ public class ControllerNode {
             DatagramSocket socketS = new DatagramSocket(8888);
             InetAddress adress = InetAddress.getByName("localhost");
             iniciarDiscos(socketS, adress);
+            
             while (flag) {
                 byte[] accion = new byte[1024];
                 socketS.receive(new DatagramPacket(accion, accion.length));
@@ -120,10 +121,11 @@ public class ControllerNode {
     }
 
     public static void iniciarDiscos(DatagramSocket socketS, InetAddress adress) throws IOException {
-        int numDisk = 4;
-        puertosDiscos = new int[4];
+        String numDisk = String.valueOf(5);
+        socketS.send(new DatagramPacket(numDisk.getBytes(), numDisk.getBytes().length, adress, 7777));
+        puertosDiscos = new int[Integer.parseInt(numDisk)];
         int puertoBase = 8877;
-        for (int i = 0; i < numDisk; i++) {
+        for (int i = 0; i < Integer.parseInt(numDisk); i++) {
             puertosDiscos[i] = puertoBase;
             byte[] data2 = String.valueOf(puertosDiscos[i]).getBytes();
             socketS.send(new DatagramPacket(data2, data2.length, adress, 7777));

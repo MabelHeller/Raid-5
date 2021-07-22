@@ -288,18 +288,17 @@ public class Principal extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-
-            byte[] accion = "guardar".getBytes();
-            ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
-
-            byte[] libro = (jtfNombre.getText() + jtfEdicion.getText()).getBytes();
-            ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
-
-            Huffman.zipFile(file.getPath(), "comprimido.txt");
-            byte[] b = Files.readAllBytes(new File("comprimido.txt").toPath());
-            ds.send(new DatagramPacket(b, b.length, InetAddress.getByName("localhost"), 8888));
-
             if (guardarMetadatos() > 0) {
+                byte[] accion = "guardar".getBytes();
+                ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
+
+                byte[] libro = (jtfNombre.getText() + jtfEdicion.getText()).getBytes();
+                ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
+
+                Huffman.zipFile(file.getPath(), "comprimido.txt");
+                byte[] b = Files.readAllBytes(new File("comprimido.txt").toPath());
+                ds.send(new DatagramPacket(b, b.length, InetAddress.getByName("localhost"), 8888));
+
                 this.jtfNombre.setText("");
                 this.jtfPropietario.setText("");
                 this.jtfFecha.setText("");
@@ -402,14 +401,14 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
-    public void recargar(){
-         try {
-           int sizeModel = modelo.getRowCount();
- 
-	    for (int i = 0; i < sizeModel ; i ++) {
-	    	modelo.removeRow(0);
-	    } 
-            
+    public void recargar() {
+        try {
+            int sizeModel = modelo.getRowCount();
+
+            for (int i = 0; i < sizeModel; i++) {
+                modelo.removeRow(0);
+            }
+
             jTable1.setModel(modelo);
             PreparedStatement ps = null;
             ResultSet rs = null;
@@ -421,7 +420,6 @@ public class Principal extends javax.swing.JFrame {
 
             ResultSetMetaData rsMd = rs.getMetaData();
             int cantidadColumnas = rsMd.getColumnCount();
-            
 
             while (rs.next()) {
                 Object[] filas = new Object[cantidadColumnas];
@@ -438,7 +436,7 @@ public class Principal extends javax.swing.JFrame {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void Buscar() {
         DefaultTableModel modelo2 = new DefaultTableModel();
         //añadimos las columnas al modelo
@@ -530,29 +528,33 @@ public class Principal extends javax.swing.JFrame {
 
     public void recuperarArchivo() {
         try {
+            if (jTable1.getSelectedRow() >= 0) {
+                byte[] accion = "recuperar".getBytes();
+                ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
 
-            byte[] accion = "recuperar".getBytes();
-            ds.send(new DatagramPacket(accion, accion.length, InetAddress.getByName("localhost"), 8888));
+                String nombre = this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0).toString();
+                String edicion = this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 3).toString();
 
-            String nombre = this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 0).toString();
-            String edicion = this.jTable1.getValueAt(this.jTable1.getSelectedRow(), 3).toString();
+                byte[] libro = (nombre + edicion).getBytes();
+                ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
 
-            byte[] libro = (nombre + edicion).getBytes();
-            ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
+                byte[] receive = new byte[65535];
+                File fileTemp = new File("libroTemporal.txt");
+                ds.receive(new DatagramPacket(receive, receive.length));
+                Files.write(fileTemp.toPath(), receive);
+                Huffman.unZipFile("libroTemporal.txt", "libroObtenido.txt");
 
-            byte[] receive = new byte[65535];
-            File fileTemp = new File("libroTemporal.txt");
-            ds.receive(new DatagramPacket(receive, receive.length));
-            Files.write(fileTemp.toPath(), receive);
-            Huffman.unZipFile("libroTemporal.txt", "libroObtenido.txt");
+                File file = new File("libroObtenido.txt");
 
-            File file = new File("libroObtenido.txt");
+                BufferedReader br = new BufferedReader(new FileReader(file));
 
-            BufferedReader br = new BufferedReader(new FileReader(file));
+                String st;
 
-            String st;
-            while ((st = br.readLine()) != null) {
-                jTextArea1.append(st + "\n");
+                while ((st = br.readLine()) != null) {
+                    jTextArea1.append(st + "\n");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un libro primero");
             }
 
         } catch (SocketException ex) {
