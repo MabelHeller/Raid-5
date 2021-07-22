@@ -90,21 +90,27 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   # Expresiones de Gratitud
   
   * JTable en Java y MySQL
+ 
  https://codigosdeprogramacion.com/cursos/?lesson=6-jtable-en-java-y-mysql
  
   * Utilice la codificación huffman para comprimir y descomprimir archivos de texto Java
+ 
  https://programmerclick.com/article/7780824413/
  
   * Borrar un archivo
+ 
  https://decodigo.com/java-borrar-un-archivo
  
   * Seleccionar archivos con JFileChooser
+ 
  http://puntocomnoesunlenguaje.blogspot.com/2018/07/seleccionar-archivos-con-jfilechooser.html
  
   * Buscar un Dato dentro de un JTable
+ 
  http://foro.chuidiang.org/java-j2se/buscar-un-dato-dentro-de-un-jtable/
  
   * raid
+ 
  https://github.com/zhz000/raid
 
   
