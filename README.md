@@ -48,7 +48,7 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   
   * Para realizar la conexion de la base de datos con el lenguaje de programación Java se debe agregar la libreria MySQL JDBC Driver al proyecto de la siguiente manera: 
   * Se debe de seleccionar la carpeta de Libraries y pulsar el boton derecho para elegir la opción de Add Library
-![WhatsApp Image 2021-06-01 at 12 05 32 AM](https://user-images.githubusercontent.com/28734060/120279199-66ffcd80-c273-11eb-9650-d36ba761271c.jpg)
+![WhatsApp Image 2021-07-21 at 9 16 23 PM](https://user-images.githubusercontent.com/28734060/126585750-52fa7be3-9c60-45bb-8837-9a6c5ca16d7b.jpeg)
 
 
 
