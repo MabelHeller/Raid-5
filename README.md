@@ -17,7 +17,7 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   ![WhatsApp Image 2021-06-01 at 9 45 56 AM](https://user-images.githubusercontent.com/28734060/120353338-d64edf00-c2be-11eb-8be1-9a84b4288e9d.jpg)
   
   Se podrá observar como esta lista la clonación del repositorio y el proyecto se encuentra en la carpeta GitHub que se encuentra en la carpeta de documentos de su ordenador.
-  ![WhatsApp Image 2021-07-21 at 9 16 23 PM](https://user-images.githubusercontent.com/28734060/126585455-5a7906e5-c27e-4236-81de-ede39f51b7d1.jpeg)
+  ![WhatsApp Image 2021-07-21 at 9 16 23 PM](https://user-images.githubusercontent.com/28734060/126585750-52fa7be3-9c60-45bb-8837-9a6c5ca16d7b.jpeg)
   
   # Título del Proyecto
   SA File System (SAFS)
@@ -48,7 +48,55 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   
   * Para realizar la conexion de la base de datos con el lenguaje de programación Java se debe agregar la libreria MySQL JDBC Driver al proyecto de la siguiente manera: 
   * Se debe de seleccionar la carpeta de Libraries y pulsar el boton derecho para elegir la opción de Add Library
-![WhatsApp Image 2021-07-21 at 9 16 23 PM](https://user-images.githubusercontent.com/28734060/126585750-52fa7be3-9c60-45bb-8837-9a6c5ca16d7b.jpeg)
+![WhatsApp Image 2021-06-01 at 12 05 32 AM](https://user-images.githubusercontent.com/28734060/120279199-66ffcd80-c273-11eb-9650-d36ba761271c.jpg)
 
+  * Se agrega la libreria antes mencionada seleccionandola y luego se pulsa en Add Library 
+  ![WhatsApp Image 2021-06-01 at 12 07 10 AM](https://user-images.githubusercontent.com/28734060/120279372-96163f00-c273-11eb-90a7-d9106b3673ac.jpg)
 
+  * Una vez realizados estos pasos se puede realizar la conexion de forma exitosa.
+  
+  # Construido con
+  
+  * Java - Lenguaje de programación
+  * MySQL - Gestor de Base de datos
+  * GitHub - Controlador de versiones
+  * Netbeans IDE - Entorno de desarrollo
+  * JDBC MySQL - Conector base de datos
 
+  # Wiki 
+  Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra Wiki.
+  
+  # Versionado
+  * jdk 11
+  * MySQL 8.0.25
+  * Netbeans IDE 8.2
+  * JDBC MySQL 5.1.23
+
+  # Autores
+  1. Heller Arguedas Quesada
+  2. Maikel Matamoros Zúñiga
+  
+  # Licencia
+  Este proyecto no está bajo ningun Licencia
+    
+  # Expresiones de Gratitud
+  
+  * JTable en Java y MySQL
+ https://codigosdeprogramacion.com/cursos/?lesson=6-jtable-en-java-y-mysql
+ 
+  * Utilice la codificación huffman para comprimir y descomprimir archivos de texto Java
+ https://programmerclick.com/article/7780824413/
+ 
+  * Borrar un archivo
+ https://decodigo.com/java-borrar-un-archivo
+ 
+  * Seleccionar archivos con JFileChooser
+ http://puntocomnoesunlenguaje.blogspot.com/2018/07/seleccionar-archivos-con-jfilechooser.html
+ 
+  * Buscar un Dato dentro de un JTable
+ http://foro.chuidiang.org/java-j2se/buscar-un-dato-dentro-de-un-jtable/
+ 
+  * raid
+ https://github.com/zhz000/raid
+
+  
