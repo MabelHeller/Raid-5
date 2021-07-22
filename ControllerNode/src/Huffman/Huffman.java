@@ -1,17 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Huffman;
 
 import java.io.*;
 import java.util.*;
 
-/**
- *
- * @author Heller
- */
+
 public class Huffman {
   static Map<Byte,String>huffmanCodes=new HashMap<>();// Como a-> 1001
 /*
@@ -24,10 +17,7 @@ public class Huffman {
         treeNode root=createhuffmantree(contentlist);
         root.preOreder();
         huffmanCodes=getCodes(root);
-        System.out.println("El código Huffman correspondiente a cada personaje:"+huffmanCodes);
         byte[] zipCodes=zip(contentbytes,huffmanCodes);
-        System.out.println("La cadena completa de Huffman se convierte en forma de bytes para su transmisión:");
-        System.out.println(Arrays.toString(zipCodes));
         return zipCodes;
     }
 
@@ -83,7 +73,7 @@ public class Huffman {
             os.write(finalBytes);
 
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
         }finally {
             try {
                 os.close();
@@ -181,7 +171,7 @@ public class Huffman {
         for(byte b:bytes){
             stringBuilder.append(huffmanCodes.get(b));
         }
-        System.out.println("Cadena binaria codificada"+stringBuilder.toString());
+        //System.out.println("Cadena binaria codificada"+stringBuilder.toString());
 
         // Calcula el número de bits convertidos de codificación binaria Huffman a byte []
         int len=0;
@@ -238,7 +228,7 @@ public class Huffman {
             boolean flag=(i==huffmanCodesByte.length-1);
             stringBuilder1.append(byteToBitString(!flag,b));
         }
-        System.out.println("Cadena binaria después de la decodificación"+stringBuilder1.toString());
+        //System.out.println("Cadena binaria después de la decodificación"+stringBuilder1.toString());
 
         // Decodifica la cadena de acuerdo con la tabla de mapeo de Huffman
         // 1. Reemplace la tabla de asignación de codificación de Huffman, porque se requiere una consulta inversa
