@@ -10,13 +10,16 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   
 * ### Paso 2
   Se elige la opción de "Clone a repository from the Internet..."
+  
   ![1](https://user-images.githubusercontent.com/28734060/120278197-38352780-c272-11eb-8b53-9176f4035740.jpeg)
   
 * ### Paso 3
   Se coloca el link del repositorio que se desea clonar y se presiona el boton "Clone" 
+  
   ![WhatsApp Image 2021-06-01 at 9 45 56 AM](https://user-images.githubusercontent.com/28734060/120353338-d64edf00-c2be-11eb-8be1-9a84b4288e9d.jpg)
   
   Se podrá observar como esta lista la clonación del repositorio y el proyecto se encuentra en la carpeta GitHub que se encuentra en la carpeta de documentos de su ordenador.
+  
   ![WhatsApp Image 2021-07-21 at 9 16 23 PM](https://user-images.githubusercontent.com/28734060/126585750-52fa7be3-9c60-45bb-8837-9a6c5ca16d7b.jpeg)
   
   # Título del Proyecto
@@ -48,9 +51,11 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   
   * Para realizar la conexion de la base de datos con el lenguaje de programación Java se debe agregar la libreria MySQL JDBC Driver al proyecto de la siguiente manera: 
   * Se debe de seleccionar la carpeta de Libraries y pulsar el boton derecho para elegir la opción de Add Library
-![WhatsApp Image 2021-06-01 at 12 05 32 AM](https://user-images.githubusercontent.com/28734060/120279199-66ffcd80-c273-11eb-9650-d36ba761271c.jpg)
+
+  ![WhatsApp Image 2021-06-01 at 12 05 32 AM](https://user-images.githubusercontent.com/28734060/120279199-66ffcd80-c273-11eb-9650-d36ba761271c.jpg)
 
   * Se agrega la libreria antes mencionada seleccionandola y luego se pulsa en Add Library 
+  
   ![WhatsApp Image 2021-06-01 at 12 07 10 AM](https://user-images.githubusercontent.com/28734060/120279372-96163f00-c273-11eb-90a7-d9106b3673ac.jpg)
 
   * Una vez realizados estos pasos se puede realizar la conexion de forma exitosa.
@@ -66,11 +71,22 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   # Diagramas
   
   * Diagrama de Componentes
+  
   ![DiagramaComponentes](https://user-images.githubusercontent.com/28734060/126586821-83f93525-aae0-40d1-a1c4-b84588792c89.jpg)
   
-  * Diagrama de Clases
+  * Diagrama de Clases de DiskNodes
   
+  ![Diagrama de Clases DiskNodes vpd (1)](https://user-images.githubusercontent.com/28734060/126694689-44365518-2d97-4f3f-9763-25c64bfb8228.jpg)
+ 
+  * Diagrama de Clases de Controller
+  
+  ![Diagrama de Clase ControllerNode](https://user-images.githubusercontent.com/28734060/126695100-bfa67b22-e65c-40aa-a85b-ec5450c60924.jpg)
+ 
 
+  * Diagrama de Clases de saSearch
+  
+  ![Diagrama de Clase saSearch](https://user-images.githubusercontent.com/28734060/126695680-642a3daf-546c-41eb-b57d-db0ddf37f6aa.jpg)
+    
   # Wiki 
   Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra Wiki.
   
@@ -89,7 +105,7 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
     
   # Expresiones de Gratitud
   
-  * JTable en Java y MySQL
+ * JTable en Java y MySQL
  
  https://codigosdeprogramacion.com/cursos/?lesson=6-jtable-en-java-y-mysql
  
