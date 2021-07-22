@@ -17,7 +17,7 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
   ![WhatsApp Image 2021-06-01 at 9 45 56 AM](https://user-images.githubusercontent.com/28734060/120353338-d64edf00-c2be-11eb-8be1-9a84b4288e9d.jpg)
   
   Se podrá observar como esta lista la clonación del repositorio y el proyecto se encuentra en la carpeta GitHub que se encuentra en la carpeta de documentos de su ordenador.
-  ![WhatsApp Image 2021-05-31 at 10 37 53 PM](https://user-images.githubusercontent.com/28734060/120279110-4c2d5900-c273-11eb-8d3a-f7fb478ebcbf.jpg)
+  
   
   # Título del Proyecto
   Cliente y Servidor TFTP para la transferencia de imagenes.
