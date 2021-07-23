@@ -12,6 +12,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -37,6 +38,15 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() throws ClassNotFoundException {
         try {
+            
+             File directorio = new File("temps");
+            if (!directorio.exists()) {
+                if (directorio.mkdirs()) {
+                    System.out.println("Directorio creado");
+                } else {
+                    System.out.println("Error al crear directorio");
+                }
+            }
             this.ds = new DatagramSocket(8866);
         } catch (SocketException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
@@ -295,15 +305,17 @@ public class Principal extends javax.swing.JFrame {
                 byte[] libro = (jtfNombre.getText() + jtfEdicion.getText()).getBytes();
                 ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
 
-                Huffman.zipFile(file.getPath(), "comprimido.txt");
-                byte[] b = Files.readAllBytes(new File("comprimido.txt").toPath());
+                Huffman.zipFile(file.getPath(), "temps/comprimido.txt");
+                byte[] b = Files.readAllBytes(new File("temps/comprimido.txt").toPath());
                 ds.send(new DatagramPacket(b, b.length, InetAddress.getByName("localhost"), 8888));
 
                 this.jtfNombre.setText("");
                 this.jtfPropietario.setText("");
                 this.jtfFecha.setText("");
                 this.jtfEdicion.setText("");
+                this.jTextField1.setText("");
             }
+            deleteDirectoryStream(new File("temps").toPath());
         } catch (SQLException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(this, "Ha surgido un error y no se ha podido guardar el registro.");
@@ -524,6 +536,7 @@ public class Principal extends javax.swing.JFrame {
                 entrada.close();
             }
         }
+        
     }
 
     public void recuperarArchivo() {
@@ -539,24 +552,25 @@ public class Principal extends javax.swing.JFrame {
                 ds.send(new DatagramPacket(libro, libro.length, InetAddress.getByName("localhost"), 8888));
 
                 byte[] receive = new byte[65535];
-                File fileTemp = new File("libroTemporal.txt");
+                File fileTemp = new File("temps/libroTemporal.txt");
                 ds.receive(new DatagramPacket(receive, receive.length));
                 Files.write(fileTemp.toPath(), receive);
-                Huffman.unZipFile("libroTemporal.txt", "libroObtenido.txt");
+                Huffman.unZipFile("temps/libroTemporal.txt", "temps/libroObtenido.txt");
 
-                File file = new File("libroObtenido.txt");
+                File file = new File("temps/libroObtenido.txt");
 
                 BufferedReader br = new BufferedReader(new FileReader(file));
 
                 String st;
-
+                jTextArea1.setText("");
                 while ((st = br.readLine()) != null) {
+                    
                     jTextArea1.append(st + "\n");
                 }
             } else {
                 JOptionPane.showMessageDialog(this, "Seleccione un libro primero");
             }
-
+            deleteDirectoryStream(new File("temps").toPath());
         } catch (SocketException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnknownHostException ex) {
@@ -579,6 +593,13 @@ public class Principal extends javax.swing.JFrame {
         return ret;
     }
 
+    public static void deleteDirectoryStream(Path path) throws IOException {
+        for (File file : new File("temps").listFiles()) {
+            if (!file.isDirectory()) {
+                file.delete();
+            }
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
