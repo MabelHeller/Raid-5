@@ -24,9 +24,9 @@ class treeNode implements Comparable<treeNode>{
     @Override
     public int compareTo(treeNode o) {
         // Indica ordenar de pequeño a grande
-        return this.value-o.value;
+        //return this.value-o.value;
         // Si significa ordenar de mayor a menor
-        //return -(this.value-o.value);
+        return -(this.value-o.value);
     }
 
     // Recorrido de reserva

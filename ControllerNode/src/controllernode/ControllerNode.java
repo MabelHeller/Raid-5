@@ -1,5 +1,5 @@
-
 package controllernode;
+
 import Huffman.Huffman;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,6 @@ import java.net.SocketException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-
 public class ControllerNode {
 
     static int[] puertosDiscos;
@@ -19,11 +18,20 @@ public class ControllerNode {
     public static void main(String[] args) {
 
         try {
+            File directorio = new File("temps");
+            if (!directorio.exists()) {
+                if (directorio.mkdirs()) {
+                    System.out.println("Directorio creado");
+                } else {
+                    System.out.println("Error al crear directorio");
+                }
+            }
+
             boolean flag = true;
             DatagramSocket socketS = new DatagramSocket(8888);
             InetAddress adress = InetAddress.getByName("localhost");
             iniciarDiscos(socketS, adress);
-            
+
             while (flag) {
                 byte[] accion = new byte[1024];
                 socketS.receive(new DatagramPacket(accion, accion.length));
@@ -33,12 +41,12 @@ public class ControllerNode {
                         byte[] libroGuardar = new byte[1024];
                         socketS.receive(new DatagramPacket(libroGuardar, libroGuardar.length));
                         String libroGuardarNombre = data(libroGuardar).toString();
-                        
+
                         byte[] receive = new byte[65535];
-                        File fileTemp = new File("temporal.txt");
+                        File fileTemp = new File("temps/temporal.txt");
                         socketS.receive(new DatagramPacket(receive, receive.length));
                         Files.write(fileTemp.toPath(), receive);
-                        Huffman.unZipFile("temporal.txt", "descomprimido.txt");
+                        Huffman.unZipFile("temps/temporal.txt", "temps/descomprimido.txt");
 
                         guardarLibroEnDiscos(socketS, adress, libroGuardarNombre);
 
@@ -48,7 +56,7 @@ public class ControllerNode {
                         socketS.receive(new DatagramPacket(libroRecuperar, libroRecuperar.length));// Save data to packet
                         String libroRecuperarNombre = data(libroRecuperar).toString();
                         recuperarArchivosDeDiscos(socketS, adress, libroRecuperarNombre);
-                        Huffman.zipFile("temporalFinal.txt", "temps/libroTemporalComprimido.txt");
+                        Huffman.zipFile("temps/temporalFinal.txt", "temps/libroTemporalComprimido.txt");
                         byte[] libroFinal = Files.readAllBytes(new File("temps/libroTemporalComprimido.txt").toPath());
                         socketS.send(new DatagramPacket(libroFinal, libroFinal.length, adress, 8866));
                         break;
@@ -58,20 +66,19 @@ public class ControllerNode {
                 }
 
                 deleteDirectoryStream(new File("temps").toPath());
-
+                
             }
         } catch (SocketException e) {
             e.printStackTrace();
-        } 
-        catch (IOException e) {
-         
+        } catch (IOException e) {
+
             e.printStackTrace();
         }
 
     }
 
     public static void recuperarArchivosDeDiscos(DatagramSocket socketS, InetAddress adress, String name) throws IOException {
-        File temporal = new File("temporalFinal.txt");
+        File temporal = new File("temps/temporalFinal.txt");
         temporal.createNewFile();
         for (int i = 0; i < puertosDiscos.length; i++) {
             byte[] accion = "recuperar".getBytes();
@@ -85,7 +92,7 @@ public class ControllerNode {
             int tamaño = Integer.parseInt(data(fileSize).toString());
             byte[] fileContent = new byte[tamaño];
             socketS.receive(new DatagramPacket(fileContent, fileContent.length));
-            Files.write(new File("tempFile.txt").toPath(), fileContent);
+            Files.write(new File("temps/tempFile.txt").toPath(), fileContent);
             byte[] srcPos = new byte[1024];
             socketS.receive(new DatagramPacket(srcPos, srcPos.length));
             int pos = Integer.parseInt(data(srcPos).toString());
@@ -95,7 +102,7 @@ public class ControllerNode {
 
     public static void guardarLibroEnDiscos(DatagramSocket socketS, InetAddress adress, String srcFilePath) throws IOException {
 
-        File archivo = new File("descomprimido.txt");
+        File archivo = new File("temps/descomprimido.txt");
         long srcFileLength = archivo.length();
 
         long dflel = srcFileLength / puertosDiscos.length;
@@ -143,8 +150,8 @@ public class ControllerNode {
         RandomAccessFile rafDes = null;
 
         try {
-            rafSrc = new RandomAccessFile("tempFile.txt", "r");
-            rafDes = new RandomAccessFile("temporalFinal.txt", "rw");
+            rafSrc = new RandomAccessFile("temps/tempFile.txt", "r");
+            rafDes = new RandomAccessFile("temps/temporalFinal.txt", "rw");
             rafDes.seek(srcPos);
             byte[] buffer = new byte[1024];
             int len;
@@ -181,7 +188,7 @@ public class ControllerNode {
         RandomAccessFile rafDes = null;
         try {
             desFile.createNewFile();
-            rafSrc = new RandomAccessFile("descomprimido.txt", "r");
+            rafSrc = new RandomAccessFile("temps/descomprimido.txt", "r");
             rafDes = new RandomAccessFile(desFile, "rw");
             rafSrc.seek(loc * dflel);
             int bufferLen = 1024;
