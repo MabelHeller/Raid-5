@@ -111,7 +111,7 @@ Para empezar se debe de realizar una clonación del repositorio, utilizando GitH
  
   * Utilice la codificación huffman para comprimir y descomprimir archivos de texto Java
  
- https://programmerclick.com/article/7780824413/
+ https://programmerclick.com/article/24771259635/#_674
  
   * Borrar un archivo
  
